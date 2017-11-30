@@ -10,7 +10,7 @@
 
 """This module exports the Vcom plugin class."""
 
-from SublimeLinter.lint import Linter, util
+from SublimeLinter.lint import Linter
 
 
 class Vcom(Linter):
@@ -20,13 +20,9 @@ class Vcom(Linter):
     cmd = 'vcom -2008 -work work @'
     tempfile_suffix = 'vhd'
 
-
-
-    # SAMPLE ERRORS:
-    # 
-    # ** Error: (vcom-13069) .\filename.v(9): near "reg": syntax error, unexpected reg, expecting ';' or ','.
-    # ** Error: (vcom-13069) .\filename.v(9): Unknown identifier "ident": syntax error, unexpected reg, expecting ';' or ','.
-    # 
+    # SAMPLE ERRORS
+    # ** Error: (vcom-13069) .\fname.v(9): near "reg": syntax error, unexpected reg, expecting ';' or ','.
+    # ** Error: (vcom-13069) .\fname.v(9): Unknown identifier "var": syntax error, unexpected reg, expecting ';' or ','.
 
     regex = (
         r'^\*\* ((?P<error>Error: )|(?P<warning>Warning: ))'   # Error
@@ -34,16 +30,14 @@ class Vcom(Linter):
         r'([^\(]*\((?P<line>[0-9]+)\): )'                      # File and line
         r'(\([a-z]+-[0-9]+\) )?'                               # Error code - sometimes after
         r'((near|Unknown identifier|Undefined variable):? '    # Near/Unidentified
-            r'["\'](?P<near>[\w:;\.]+)["\']'                   # Identifier
-            r'[ :.]*)?'                                        # Near terminator
+        r'["\'](?P<near>[\w:;\.]+)["\']'                       # Identifier
+        r'[ :.]*)?'                                            # Near terminator
         r'(?P<message>.*)'                                     # Remaining message
     )
 
-
-
     def split_match(self, match):
         """
-        Override this method to prefix the error 
+        Override this method to prefix the error
         message with the lint binary name.
         """
         match, line, col, error, warning, message, near = super().split_match(match)
