@@ -14,8 +14,8 @@ from SublimeLinter.lint import Linter
 
 
 class Vcom(Linter):
-
     """Provides an interface to vcom (Mentor Modelsim)."""
+
     syntax = ('vhdl')
     cmd = 'vcom -2008 -work work @'
     tempfile_suffix = 'vhd'
@@ -36,10 +36,7 @@ class Vcom(Linter):
     )
 
     def split_match(self, match):
-        """
-        Override this method to prefix the error
-        message with the lint binary name.
-        """
+        """Override this method to prefix the error message with the lint binary name."""
         match, line, col, error, warning, message, near = super().split_match(match)
         if match:
             message = '[vcom] ' + message
